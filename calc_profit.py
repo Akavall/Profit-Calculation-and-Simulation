@@ -1,6 +1,12 @@
 
-def calc_profit(n_periods, prob_down):
-    probs_to_conv, probs = calc_probs(n_periods, prob_down)
+def calc_profit(n_periods, n_periods_before_break_up, prob_down):
+    start = [1.0]
+    probs_to_conv_1, probs = calc_probs(n_periods_before_break_up, prob_down, start)
+    n = n_periods - n_periods_before_break_up
+    probs_to_conv_2, probs = calc_probs(n, 0.5, probs)
+
+    probs_to_conv = probs_to_conv_1 + probs_to_conv_2 
+
     profit_from_trading = sum(probs_to_conv)
     expected_loss = sum(i * p for i, p in zip(xrange(1, len(probs) * 2, 2), probs[1:]))
     
@@ -9,8 +15,7 @@ def calc_profit(n_periods, prob_down):
             'expected_loss': expected_loss,}
 
 
-def calc_probs(n_periods, prob_down):
-    probs = [1.0]
+def calc_probs(n_periods, prob_down, probs):
     prob_to_conv = []
     for i in xrange(n_periods):
         probs = step_one(probs, prob_down)
