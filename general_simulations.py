@@ -1,7 +1,7 @@
 import numpy as np
-# import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt 
 import logging 
-# import pandas as pd 
+import pandas as pd 
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -13,7 +13,6 @@ def one_pairs_gen(n_periods, conv_rate, break_up_prob, variance):
     for i in xrange(n_periods):
         if not break_up and np.random.uniform(0, 1) < break_up_prob:
             break_up = True 
-            # logging.info("Broke up on: {}".format(i))
 
         delta = np.random.uniform(-variance, variance)
         true_value.append(true_value[-1] + delta)
@@ -34,17 +33,6 @@ def one_pairs_gen(n_periods, conv_rate, break_up_prob, variance):
 
         x.append(x[-1] + delta_x)
         y.append(y[-1] + delta_y)
-
-        # Debug:
-        y = [100] * n_periods
-
-        x = [100]
-        for i in xrange(n_periods - 1):
-            x.append(x[-1] + np.random.uniform(-variance, variance))
-
-        # Debug 2:
-        # y = [100] * 10
-        # x = [100, 102.2, 97, 92, 97,99, 100, 101, 103, 108] 
 
     return {'true_value': true_value, 'x': x, 'y': y}
 
@@ -75,7 +63,6 @@ def calc_profit(x, y, thresh):
     bought_gap = 0
     c = 0
     for ele_x, ele_y in zip(x, y):
-        # logging.info("ind: {}, profit_from_trading: {}, ele_x: {}, bought_x: {}, bought_y: {}".format(c, profit_from_trading, ele_x, bought_x, bought_y))
 
         if not bought_x and not bought_y:
             if ele_x - ele_y > thresh:
@@ -101,19 +88,15 @@ def calc_profit(x, y, thresh):
     else:
         loss = 0
 
-    # logging.info("Profit: {}, Loss: {}".format(profit_from_trading, loss))
-    # if loss < 0:
-    #     logging.warn("bought_gap : {}, ele_x: {}, ele_y: {}".format(bought_gap, ele_x, ele_y))
-
     return {'profit': profit_from_trading - loss,
             'profit_from_trading': profit_from_trading,
             'loss': loss}
 
 
-# def show_plot(result_dict):
-#     df = pd.DataFrame(result_dict)
-#     df.plot()
-#     plt.show()
+def show_plot(result_dict):
+    df = pd.DataFrame(result_dict)
+    df.plot()
+    plt.show()
 
     
     
