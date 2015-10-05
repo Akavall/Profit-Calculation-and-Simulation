@@ -13,7 +13,6 @@ def one_pairs_gen(n_periods, conv_rate, break_up_prob, variance):
     for i in xrange(n_periods):
         if not break_up and np.random.uniform(0, 1) < break_up_prob:
             break_up = True 
-            # logging.info("Broke up on: {}".format(i))
 
         delta = np.random.uniform(-variance, variance)
         true_value.append(true_value[-1] + delta)
@@ -62,7 +61,9 @@ def calc_profit(x, y, thresh):
     bought_x = False
     bought_y = False 
     bought_gap = 0
+
     for ele_x, ele_y in zip(x, y):
+
         if not bought_x and not bought_y:
             if ele_x - ele_y > thresh:
                 bought_gap = ele_x - ele_y
@@ -72,21 +73,20 @@ def calc_profit(x, y, thresh):
                 bought_x = True
         else:
             if bought_x:
-                if ele_x > ele_y:
-                    profit_from_trading += bought_gap
+                if ele_x >= ele_y:
+                    profit_from_trading += (bought_gap + ele_x - ele_y)
                     bought_x = False
             elif bought_y:
-                if ele_y > ele_x:
-                    profit_from_trading += bought_gap
+                if ele_y >= ele_x:
+                    profit_from_trading += (bought_gap + ele_y - ele_x)
                     bought_y = False 
+
     if bought_x:
         loss = (ele_y - ele_x) - bought_gap
     elif bought_y:
         loss = (ele_x - ele_y) - bought_gap
     else:
         loss = 0
-
-    # logging.info("Profit: {}, Loss: {}".format(profit, loss))
 
     return {'profit': profit_from_trading - loss,
             'profit_from_trading': profit_from_trading,
