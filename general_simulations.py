@@ -61,7 +61,7 @@ def calc_profit(x, y, thresh):
     bought_x = False
     bought_y = False 
     bought_gap = 0
-    c = 0
+
     for ele_x, ele_y in zip(x, y):
 
         if not bought_x and not bought_y:
@@ -80,7 +80,7 @@ def calc_profit(x, y, thresh):
                 if ele_y >= ele_x:
                     profit_from_trading += (bought_gap + ele_y - ele_x)
                     bought_y = False 
-        c += 1
+
     if bought_x:
         loss = (ele_y - ele_x) - bought_gap
     elif bought_y:
