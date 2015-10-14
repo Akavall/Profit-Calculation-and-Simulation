@@ -41,8 +41,10 @@ def generate_plot_data_general():
         logging.info("conv_prob : {}".format(conv_prob))
         for break_up_prob in np.linspace(0, 1, 25):
             break_up_prob_list.append(break_up_prob)
-            conv_prob_list.append(break_up_prob)
-            profits_list.append(calc_profit_sim_wrapper(250, conv_prob, break_up_prob, break_up_prob, break_up_prob/100, 1000)['profit'])
+            conv_prob_list.append(conv_prob)
+            variance = break_up_prob
+            thresh = break_up_prob / 100.0
+            profits_list.append(calc_profit_sim_wrapper(250, conv_prob, break_up_prob, variance, thresh, 5000)['profit'])
     return break_up_prob_list, conv_prob_list, profits_list
 
 def make_3d_scatter_plot_general(x, y, z, x_label, y_label, z_label):
@@ -62,7 +64,7 @@ if __name__ == "__main__":
     # make_3d_scatter_plot(x, y, z, "Days Before Break Up", "Probability to Converge", "Profit")
 
     x, y, z = generate_plot_data_general()
-    make_3d_scatter_plot(x, y, z, "Days Before Break Up", "Probability to Converge", "Profit")
+    make_3d_scatter_plot(x, y, z, "Probability of Break Up", "Probability to Converge", "Profit")
 
 
 
