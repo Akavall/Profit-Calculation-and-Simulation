@@ -34,12 +34,17 @@ def one_pairs_gen(n_periods, conv_rate, break_up_prob, variance):
         x.append(x[-1] + delta_x)
         y.append(y[-1] + delta_y)
 
-    return {'true_value': true_value, 'x': x, 'y': y}
+    result = {'true_value': true_value, 'x': x, 'y': y}
+    return result 
 
 def calc_profit_sim_wrapper(n_periods, conv_rate, break_up_prob, variance, thresh, n_iterations):
+    # this is still a great puzzle, why does this never come up?
+    print "Inside"
+    logging.info("Inside calc_profit_sim_wrapper")
     profit = 0
     profit_from_trading = 0
     loss = 0
+    number_of_transactions = 0
     trade_info = {}
     for _ in range(n_iterations):
         price_paths = one_pairs_gen(n_periods, conv_rate, break_up_prob, variance)
@@ -48,11 +53,13 @@ def calc_profit_sim_wrapper(n_periods, conv_rate, break_up_prob, variance, thres
         profit += trade_result['profit']
         profit_from_trading += trade_result['profit_from_trading']
         loss += trade_result['loss']
+        number_of_transactions += trade_result['number_of_transactions']
 
     trade_info = {}
     trade_info['profit'] = profit / n_iterations
     trade_info['profit_from_trading'] = profit_from_trading / n_iterations
     trade_info['loss'] = loss / n_iterations
+    trade_info['number_of_transactions'] = float(number_of_transactions) / n_iterations
 
     return trade_info
     
@@ -61,6 +68,7 @@ def calc_profit(x, y, thresh):
     bought_x = False
     bought_y = False 
     bought_gap = 0
+    number_of_transactions = 0
 
     for ele_x, ele_y in zip(x, y):
 
@@ -68,9 +76,11 @@ def calc_profit(x, y, thresh):
             if ele_x - ele_y > thresh:
                 bought_gap = ele_x - ele_y
                 bought_y = True
+                number_of_transactions += 1
             elif ele_y - ele_x > thresh:
                 bought_gap = ele_y - ele_x 
                 bought_x = True
+                number_of_transactions += 1
         else:
             if bought_x:
                 if ele_x >= ele_y:
@@ -90,7 +100,8 @@ def calc_profit(x, y, thresh):
 
     return {'profit': profit_from_trading - loss,
             'profit_from_trading': profit_from_trading,
-            'loss': loss}
+            'loss': loss,
+            'number_of_transactions': number_of_transactions}
 
 
 def show_plot(result_dict):
