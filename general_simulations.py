@@ -5,13 +5,16 @@ import pandas as pd
 
 logging.getLogger().setLevel(logging.INFO)
 
-def one_pairs_gen(n_periods, conv_rate, break_up_prob, variance):
+def one_pairs_gen(n_periods, conv_rate, break_up_prob_run, variance):
     true_value = [100]
     x = [100]
     y = [100]
     break_up = False 
+    # We need to modify break up prob, such that probability
+    # we are talking about probility to break up during 
+    # the the whole run, not 1 period 
     for i in xrange(n_periods):
-        if not break_up and np.random.uniform(0, 1) < break_up_prob:
+        if not break_up and np.random.uniform(0, 1) < break_up_prob_run:
             break_up = True 
 
         delta = np.random.uniform(-variance, variance)
@@ -37,17 +40,14 @@ def one_pairs_gen(n_periods, conv_rate, break_up_prob, variance):
     result = {'true_value': true_value, 'x': x, 'y': y}
     return result 
 
-def calc_profit_sim_wrapper(n_periods, conv_rate, break_up_prob, variance, thresh, n_iterations):
-    # this is still a great puzzle, why does this never come up?
-    print "Inside"
-    logging.info("Inside calc_profit_sim_wrapper")
+def calc_profit_sim_wrapper(n_periods, conv_rate, break_up_prob_run, variance, thresh, n_iterations):
     profit = 0
     profit_from_trading = 0
     loss = 0
     number_of_transactions = 0
     trade_info = {}
     for _ in range(n_iterations):
-        price_paths = one_pairs_gen(n_periods, conv_rate, break_up_prob, variance)
+        price_paths = one_pairs_gen(n_periods, conv_rate, break_up_prob_run, variance)
         trade_result = calc_profit(price_paths['x'], price_paths['y'], thresh)
 
         profit += trade_result['profit']
@@ -93,8 +93,10 @@ def calc_profit(x, y, thresh):
 
     if bought_x:
         loss = (ele_y - ele_x) - bought_gap
+        
     elif bought_y:
         loss = (ele_x - ele_y) - bought_gap
+        
     else:
         loss = 0
 
@@ -108,6 +110,9 @@ def show_plot(result_dict):
     df = pd.DataFrame(result_dict)
     df.plot()
     plt.show()
+
+def calc_break_up_prob_period(n_periods, break_up_prob_run):
+    return (break_up_prob_run + 1) ** (1.0 / n_periods) - 1
 
     
     
