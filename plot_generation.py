@@ -37,16 +37,21 @@ def generate_plot_data_general():
     break_up_prob_list = []
     conv_prob_list = []
     profits_list = []
-    for conv_prob in np.linspace(0, 1, 25):
+
+    # coords = [0.0, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.011, 0.012, 0.013, 0.014, 0.015, 0.016, 0.017, 0.018, 0.019, 0.02]
+
+    coords = np.linspace(0, 0.04, 40)
+
+    for conv_prob in coords:
         #debug
         #conv_prob = 1
         logging.info("conv_prob : {}".format(conv_prob))
-        for break_up_prob in np.linspace(0, 1, 25):
+        for break_up_prob in coords:
             # break_up_prob = 0
             break_up_prob_list.append(break_up_prob)
             conv_prob_list.append(conv_prob)
-            variance = break_up_prob
-            thresh = break_up_prob / 100.0
+            variance = break_up_prob * 100
+            thresh = break_up_prob
             temp = calc_profit_sim_wrapper(250, conv_prob, break_up_prob, variance, thresh, 50000)
             # logging.info("profit: {}".format(temp))
             profits_list.append(temp['profit'])
