@@ -41,10 +41,10 @@ def generate_plot_data_general():
 
     # coords = [0.0, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.011, 0.012, 0.013, 0.014, 0.015, 0.016, 0.017, 0.018, 0.019, 0.02]
 
-    conv_prob_cords = np.linspace(0, 1, 40)
+    conv_prob_coords = np.linspace(0, 1, 40)
     break_up_coords = np.linspace(0, 0.04, 40)
 
-    for conv_prob_cords in coords:
+    for conv_prob in conv_prob_coords:
         #debug
         #conv_prob = 1
         logging.info("conv_prob : {}".format(conv_prob))
