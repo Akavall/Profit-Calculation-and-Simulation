@@ -3,18 +3,21 @@
 
 \begin{document}
 
-The Model:
+\textbf{The Model:}
 
-We have two assets X and Y, which are tied are tied to the objective true value, (TV) but have a probability to  \textit{break-up} and thus no longer be tied to the true value. We conduct pairs-trading strategy on X and Y if difference in the prices of X and Y becomes greater than a given threshold, and we trade back when the prices converge back.
+We have two assets X and Y, which are tied to the objective true value, (TV) but have a probability to  \textit{break-up} and thus no longer be tied to the true value. We conduct pairs-trading strategy on X and Y if difference in the prices of X and Y becomes greater than a given threshold, and we trade back when the prices converge.
 
-Input variables:
+\textbf{Input variables:}
 
-Convergence Rate (ConvRate)
+Convergence Rate (ConvRate): convergence factor that X and Y have toward TV
+
 Break Up Probability (BreakUpProb): Probability to break up on each individual turn.
-Variance
+
+Variance: Determines variability of X, Y and TV
+
 Threshold: critical difference between X and Y after which is reached we enter trade.
 
-In our study Variance and Threshold are direcly tied to Break Up Probability.
+In our study Variance and Threshold are directly tied to Break Up Probability.
 
 \begin{equation}
 Variance = BreakUpProb * 100
@@ -26,25 +29,25 @@ Threshold = BreakUpProb
 
 (It is probably more accurate to express BreakUpProb as a function of variance, but mathematically it is the same thing, and has no effect on the result of the simulation)
 
-Definitions of X and Y:
+\textbf{Definitions of X and Y:}
 
 Both X and Y start at 100, as well as the TV. 
 
-X and Y operate exactly the same, also when X or Y are greater than the true value they receive an negative bump, and if they are less then the true value they get a positive bump. The above for cases can be illustrated with an example of just one:
+X and Y operate exactly the same, also when X or Y are greater than the true value they receive an negative bump, and if they are less then the true value they get a positive bump. The above four cases can be illustrated with an example of just one:
 
-For example if $x_i$ is less then $tv_i$:
+For example if the relationship has not broken up, and $x_i$ is less then $tv_i$:
 
 \begin{equation}
 detlaX_i = Uniform(-variance, variance)
 \end{equation}
 
-$deltaX_i$ is chosen from an uniform distributes that ranges between specifed values of variance.
+$deltaX_i$ is chosen from an uniform distributes that ranges between specified values of variance.
 
 \begin{equation}
 detlaTV_i = Uniform(-variance, variance)
 \end{equation}
 
-$deltaTV_i$ is chosen from an uniform distributes that ranges between specifed values of variance.
+$deltaTV_i$ is chosen from an uniform distributes that ranges between specified values of variance.
 
 \begin{equation}
 tv_{i+i} = tv_i + deltaTV
@@ -52,16 +55,40 @@ tv_{i+i} = tv_i + deltaTV
 
 
 \begin{equation}
-x_{i+i} = x_i + deltaX_{i} + (tv_i - x_i) * ConvRate
+x_{i+1} = x_i + deltaX_{i} + (tv_i - x_i) * ConvRate
 \end{equation}
 
-Therefore, for non-zero value of \textit{ConvRate} X and expected 0 value of \textit{deltaX}, X is getting a bump and is tending towards convergence. 
+Therefore, for non-zero value of \textit{ConvRate} X and expected 0 value of \textit{deltaX}, X is getting a bump and is tending towards convergence.
 
-Simulation:
+If the relationship has broken up:
 
-Since Variance and Threshold are directly tied to Break Up Probability, we only have to independed variables. 
+\begin{equation}
+x_{i+1} = x_i + deltaX_{i}
+\end{equation}
 
+And X is on its own; it no longer gets a bump to toward TV.
 
+\textbf{Simulation:}
+
+Since Variance and Threshold are directly tied to Break Up Probability, we only have two independent variables: Convergence Rate and Break Up Probability. Our dependent variable is profit. We set trading to be 250 periods. We look at 40 values ranging between 0 and 1 for Convergence Rate and 40 values between 0 and 0.04 for Break Up Probability (break up is expected to happen after 24.91 periods, if every probability of break up on individual period is 0.04). We have a 40 by 40 greed that results in 1600 different input combinations; we run the simulated pairs and applied trading strategy 10,000 times and record the average profit. 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=110mm]{figure_1.png}
+\caption{Shows the relationship between Convergence Rate, Break Up Probability(Uncertainty) and Profit with focus on Break Up Probability(Uncertainty)}
+\label{overflow}
+\end{figure}
+
+As we can see in Figure 1: for constant Convergence Rate initially increase in Break Up Probability (Uncertainty) increases the profit, but then slows down and starts to trend down. It is easy to see that increase in uncertainty (even for constant Convergence Rate) does not have a trivial relationship with profit due to trade-off between increased variability and break up. Therefore the subject is worth exploring empirically.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=110mm]{figure_2.png}
+\caption{Shows the relationship between Convergence Rate, Break Up Probability(Uncertainty) and Profit with focus on Convergence Rate}
+\label{overflow}
+\end{figure}
+
+As we can see in Figure 2: increase in Convergence Rate leads to increase in profitability, no surprises here. 
 
 
 \end{document}

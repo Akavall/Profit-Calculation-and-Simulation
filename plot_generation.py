@@ -54,7 +54,7 @@ def generate_plot_data_general():
             conv_prob_list.append(conv_prob)
             variance = break_up_prob * 100
             thresh = break_up_prob
-            temp = calc_profit_sim_wrapper(250, conv_prob, break_up_prob, variance, thresh, 50000)
+            temp = calc_profit_sim_wrapper(250, conv_prob, break_up_prob, variance, thresh, 5000)
             # logging.info("profit: {}".format(temp))
             profits_list.append(temp['profit'])
     return conv_prob_list, break_up_prob_list, profits_list
@@ -77,8 +77,8 @@ if __name__ == "__main__":
 
     x, y, z = generate_plot_data_general()
     try:
-        with open("/home/kirill/Research/Profit-Calculation-and-Simulation/plot_back_up/plot_1.json", "w") as f:
-            json.dump({"conv": x, "break_up": y, "profits": z})
+        with open("/home/kirill/Research/Profit-Calculation-and-Simulation/plot_back_up/plot_2.json", "w") as f:
+            json.dump({"conv": x, "break_up": y, "profits": z}, f)
     except:
         logging.INFO("Saving to json failed") 
 
