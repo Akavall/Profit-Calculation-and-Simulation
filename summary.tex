@@ -1,0 +1,67 @@
+\documentclass[11pt]{report}
+\usepackage{graphicx}
+
+\begin{document}
+
+The Model:
+
+We have two assets X and Y, which are tied are tied to the objective true value, (TV) but have a probability to  \textit{break-up} and thus no longer be tied to the true value. We conduct pairs-trading strategy on X and Y if difference in the prices of X and Y becomes greater than a given threshold, and we trade back when the prices converge back.
+
+Input variables:
+
+Convergence Rate (ConvRate)
+Break Up Probability (BreakUpProb): Probability to break up on each individual turn.
+Variance
+Threshold: critical difference between X and Y after which is reached we enter trade.
+
+In our study Variance and Threshold are direcly tied to Break Up Probability.
+
+\begin{equation}
+Variance = BreakUpProb * 100
+\end{equation}
+
+\begin{equation}
+Threshold = BreakUpProb
+\end{equation}
+
+(It is probably more accurate to express BreakUpProb as a function of variance, but mathematically it is the same thing, and has no effect on the result of the simulation)
+
+Definitions of X and Y:
+
+Both X and Y start at 100, as well as the TV. 
+
+X and Y operate exactly the same, also when X or Y are greater than the true value they receive an negative bump, and if they are less then the true value they get a positive bump. The above for cases can be illustrated with an example of just one:
+
+For example if $x_i$ is less then $tv_i$:
+
+\begin{equation}
+detlaX_i = Uniform(-variance, variance)
+\end{equation}
+
+$deltaX_i$ is chosen from an uniform distributes that ranges between specifed values of variance.
+
+\begin{equation}
+detlaTV_i = Uniform(-variance, variance)
+\end{equation}
+
+$deltaTV_i$ is chosen from an uniform distributes that ranges between specifed values of variance.
+
+\begin{equation}
+tv_{i+i} = tv_i + deltaTV
+\end{equation}
+
+
+\begin{equation}
+x_{i+i} = x_i + deltaX_{i} + (tv_i - x_i) * ConvRate
+\end{equation}
+
+Therefore, for non-zero value of \textit{ConvRate} X and expected 0 value of \textit{deltaX}, X is getting a bump and is tending towards convergence. 
+
+Simulation:
+
+Since Variance and Threshold are directly tied to Break Up Probability, we only have to independed variables. 
+
+
+
+
+\end{document}
